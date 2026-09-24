@@ -1,0 +1,838 @@
+<div class="doctors-page">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <h1>Doctors</h1>
+      <p>Manage hospital doctors and their information</p>
+    </div>
+
+    <button
+      class="add-doctor-btn"
+      type="button"
+      (click)="openAddDoctor()">
+      + Add Doctor
+    </button>
+  </div>
+
+
+  <!-- STATISTICS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-icon">👨‍⚕️</div>
+
+      <div>
+        <h3>{{ doctors.length }}</h3>
+        <p>Total Doctors</p>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">🟢</div>
+
+      <div>
+        <h3>{{ doctors.length }}</h3>
+        <p>Available Today</p>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">🏥</div>
+
+      <div>
+        <h3>{{ doctors.length }}</h3>
+        <p>Doctors Registered</p>
+      </div>
+    </div>
+
+
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+
+      <div>
+        <h3>{{ filteredDoctors.length }}</h3>
+        <p>Showing Results</p>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- DOCTOR DIRECTORY -->
+  <div class="doctor-directory">
+
+    <div class="directory-header">
+
+      <div>
+        <h2>Doctor Directory</h2>
+        <p>Search and manage hospital doctors</p>
+      </div>
+
+      <div class="directory-filters">
+
+        <input
+          type="text"
+          placeholder="🔍 Search doctor..."
+          [(ngModel)]="searchText"
+          (input)="applyFilters()"
+        />
+
+        <select
+          [(ngModel)]="selectedDepartment"
+          (change)="applyFilters()">
+
+          <option value="">All Departments</option>
+          <option value="Cardiology">Cardiology</option>
+          <option value="Neurology">Neurology</option>
+          <option value="Orthopedics">Orthopedics</option>
+          <option value="Pediatrics">Pediatrics</option>
+          <option value="Gynecology">Gynecology</option>
+          <option value="Dermatology">Dermatology</option>
+          <option value="General Medicine">General Medicine</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+        <tr>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Department</th>
+          <th>Experience</th>
+          <th>Fee</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+
+
+        <tbody>
+
+        <tr *ngFor="let doctorItem of filteredDoctors">
+
+          <td>
+
+            <div class="doctor-info">
+
+              <div class="doctor-avatar">
+                {{ getDoctorInitials(doctorItem.fullName) }}
+              </div>
+
+              <div>
+                <strong>
+                  {{ doctorItem.fullName }}
+                </strong>
+
+                <span>
+                    {{ doctorItem.email || 'No email available' }}
+                  </span>
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <td>
+            {{ doctorItem.specialization || '—' }}
+          </td>
+
+
+          <td>
+            {{ doctorItem.department || '—' }}
+          </td>
+
+
+          <td>
+            {{ doctorItem.experienceYears || 0 }} years
+          </td>
+
+
+          <td>
+            ₹{{ doctorItem.fee || 0 }}
+          </td>
+
+
+          <td>
+
+            <div class="action-buttons">
+
+              <button
+                class="action-btn view-btn"
+                type="button"
+                (click)="viewDoctor(doctorItem)">
+                View
+              </button>
+
+              <button
+                class="action-btn edit-btn"
+                type="button"
+                (click)="openEditDoctor(doctorItem)">
+                Edit
+              </button>
+
+              <button
+                class="action-btn delete-btn"
+                type="button"
+                (click)="deleteDoctor(doctorItem)">
+                Delete
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+
+        <tr *ngIf="filteredDoctors.length === 0">
+
+          <td
+            colspan="6"
+            class="no-data">
+
+            No doctors found.
+
+          </td>
+
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- ADD DOCTOR MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showAddDoctor">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h2>Add Doctor</h2>
+        <p>Enter doctor information</p>
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeAddDoctor()">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Full Name</label>
+
+          <input
+            type="text"
+            placeholder="Enter doctor name"
+            [(ngModel)]="doctor.name"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Email</label>
+
+          <input
+            type="email"
+            placeholder="Enter email"
+            [(ngModel)]="doctor.email"
+          />
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Phone</label>
+
+          <input
+            type="text"
+            placeholder="Enter phone number"
+            [(ngModel)]="doctor.phone"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Gender</label>
+
+          <select [(ngModel)]="doctor.gender">
+
+            <option value="">
+              Select Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Specialization</label>
+
+          <input
+            type="text"
+            placeholder="e.g. Cardiologist"
+            [(ngModel)]="doctor.specialization"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Department</label>
+
+          <select [(ngModel)]="doctor.department">
+
+            <option value="">
+              Select Department
+            </option>
+
+            <option value="Cardiology">
+              Cardiology
+            </option>
+
+            <option value="Neurology">
+              Neurology
+            </option>
+
+            <option value="Orthopedics">
+              Orthopedics
+            </option>
+
+            <option value="Pediatrics">
+              Pediatrics
+            </option>
+
+            <option value="Gynecology">
+              Gynecology
+            </option>
+
+            <option value="Dermatology">
+              Dermatology
+            </option>
+
+            <option value="General Medicine">
+              General Medicine
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Experience (Years)</label>
+
+          <input
+            type="number"
+            placeholder="e.g. 10"
+            [(ngModel)]="doctor.experience"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Consultation Fee</label>
+
+          <input
+            type="number"
+            placeholder="e.g. 500"
+            [(ngModel)]="doctor.fee"
+          />
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeAddDoctor()">
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="save-btn"
+        (click)="addDoctor()">
+        Add Doctor
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- VIEW DOCTOR MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showViewDoctor && selectedDoctor">
+
+  <div class="modal view-modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h2>Doctor Details</h2>
+        <p>Complete doctor information</p>
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeViewDoctor()">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="doctor-profile">
+
+        <div class="large-doctor-avatar">
+          {{ getDoctorInitials(selectedDoctor.fullName) }}
+        </div>
+
+        <div>
+
+          <h2>
+            {{ selectedDoctor.fullName }}
+          </h2>
+
+          <p>
+            {{ selectedDoctor.specialization || 'Doctor' }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="details-grid">
+
+        <div class="detail-item">
+          <span>Email</span>
+
+          <strong>
+            {{ selectedDoctor.email || '—' }}
+          </strong>
+        </div>
+
+
+        <div class="detail-item">
+          <span>Phone</span>
+
+          <strong>
+            {{ selectedDoctor.phone || '—' }}
+          </strong>
+        </div>
+
+
+        <div class="detail-item">
+          <span>Gender</span>
+
+          <strong>
+            {{ selectedDoctor.gender || '—' }}
+          </strong>
+        </div>
+
+
+        <div class="detail-item">
+          <span>Department</span>
+
+          <strong>
+            {{ selectedDoctor.department || '—' }}
+          </strong>
+        </div>
+
+
+        <div class="detail-item">
+          <span>Experience</span>
+
+          <strong>
+            {{ selectedDoctor.experienceYears || 0 }} years
+          </strong>
+        </div>
+
+
+        <div class="detail-item">
+          <span>Consultation Fee</span>
+
+          <strong>
+            ₹{{ selectedDoctor.fee || 0 }}
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeViewDoctor()">
+        Close
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- EDIT DOCTOR MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showEditDoctor">
+
+  <div class="modal">
+
+    <div class="modal-header">
+
+      <div>
+        <h2>Edit Doctor</h2>
+        <p>Update doctor information</p>
+      </div>
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeEditDoctor()">
+        ×
+      </button>
+
+    </div>
+
+
+    <div class="modal-body">
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Full Name</label>
+
+          <input
+            type="text"
+            placeholder="Enter doctor name"
+            [(ngModel)]="editDoctor.fullName"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Email</label>
+
+          <input
+            type="email"
+            placeholder="Enter email"
+            [(ngModel)]="editDoctor.email"
+          />
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Phone</label>
+
+          <input
+            type="text"
+            placeholder="Enter phone number"
+            [(ngModel)]="editDoctor.phone"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Gender</label>
+
+          <select [(ngModel)]="editDoctor.gender">
+
+            <option value="">
+              Select Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Specialization</label>
+
+          <input
+            type="text"
+            placeholder="e.g. Cardiologist"
+            [(ngModel)]="editDoctor.specialization"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Department</label>
+
+          <select [(ngModel)]="editDoctor.department">
+
+            <option value="">
+              Select Department
+            </option>
+
+            <option value="Cardiology">
+              Cardiology
+            </option>
+
+            <option value="Neurology">
+              Neurology
+            </option>
+
+            <option value="Orthopedics">
+              Orthopedics
+            </option>
+
+            <option value="Pediatrics">
+              Pediatrics
+            </option>
+
+            <option value="Gynecology">
+              Gynecology
+            </option>
+
+            <option value="Dermatology">
+              Dermatology
+            </option>
+
+            <option value="General Medicine">
+              General Medicine
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label>Experience (Years)</label>
+
+          <input
+            type="number"
+            placeholder="e.g. 10"
+            [(ngModel)]="editDoctor.experienceYears"
+          />
+        </div>
+
+
+        <div class="form-group">
+          <label>Consultation Fee</label>
+
+          <input
+            type="number"
+            placeholder="e.g. 500"
+            [(ngModel)]="editDoctor.fee"
+          />
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeEditDoctor()">
+        Cancel
+      </button>
+
+      <button
+        type="button"
+        class="save-btn"
+        (click)="updateDoctor()">
+        Save Changes
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- CUSTOM SUCCESS POPUP -->
+<!-- ===================================================== -->
+
+<div
+  class="success-overlay"
+  *ngIf="showSuccessPopup">
+
+  <div class="success-popup">
+
+    <button
+      type="button"
+      class="success-close-btn"
+      (click)="closeSuccessPopup()">
+      ×
+    </button>
+
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+
+    <h2>
+      {{ successTitle }}
+    </h2>
+
+
+    <p class="success-message">
+      {{ successMessage }}
+    </p>
+
+
+    <!-- LOGIN CREDENTIALS -->
+    <div
+      class="credentials-box"
+      *ngIf="successUsername && successPassword">
+
+      <div class="credentials-title">
+        Doctor Login Credentials
+      </div>
+
+
+      <div class="credential-row">
+
+        <span>Username</span>
+
+        <strong>
+          {{ successUsername }}
+        </strong>
+
+      </div>
+
+
+      <div class="credential-row">
+
+        <span>Temporary Password</span>
+
+        <strong>
+          {{ successPassword }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="success-ok-btn"
+      (click)="closeSuccessPopup()">
+
+      OK
+
+    </button>
+
+  </div>
+
+</div>

@@ -1,0 +1,356 @@
+<div class="doctor-layout" [class.collapsed]="sidebarCollapsed">
+
+  <aside class="doctor-sidebar">
+
+    <div class="sidebar-header">
+      <div class="brand">
+        <img src="/logo.jpeg" alt="MedCare">
+        <div class="brand-text">
+          <span class="brand-name">MedCare</span>
+          <span class="brand-role">Doctor Portal</span>
+        </div>
+      </div>
+
+      <button type="button" class="collapse-btn" (click)="toggleSidebar()">
+        ☰
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <a routerLink="/doctor-dashboard" class="nav-item active">
+        <span class="nav-icon">⌂</span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+
+      <a routerLink="/appointments" class="nav-item">
+        <span class="nav-icon">◷</span>
+        <span class="nav-text">My Appointments</span>
+      </a>
+
+      <a routerLink="/patients" class="nav-item">
+        <span class="nav-icon">♙</span>
+        <span class="nav-text">My Patients</span>
+      </a>
+
+      <a routerLink="/medical-records" class="nav-item">
+        <span class="nav-icon">▣</span>
+        <span class="nav-text">Medical Records</span>
+      </a>
+
+      <a routerLink="/prescriptions" class="nav-item">
+        <span class="nav-icon">▤</span>
+        <span class="nav-text">Prescriptions</span>
+      </a>
+
+      <a routerLink="/availability" class="nav-item">
+        <span class="nav-icon">◴</span>
+        <span class="nav-text">Availability</span>
+      </a>
+
+      <a routerLink="/settings" class="nav-item">
+        <span class="nav-icon">⚙</span>
+        <span class="nav-text">Settings</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+      <a routerLink="/" class="nav-item">
+        <span class="nav-icon">↪</span>
+        <span class="nav-text">Logout</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <main class="doctor-main">
+
+    <header class="topbar">
+      <div>
+        <h1>Doctor Dashboard</h1>
+        <p>Welcome back, Doctor. Here's your medical overview.</p>
+      </div>
+
+      <div class="doctor-profile">
+        <div class="profile-avatar">DR</div>
+        <div class="profile-info">
+          <strong>Doctor</strong>
+          <span>Medical Professional</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon">◷</div>
+        <div>
+          <span>Today's Appointments</span>
+          <strong>12</strong>
+          <small>4 pending</small>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">♙</div>
+        <div>
+          <span>My Patients</span>
+          <strong>86</strong>
+          <small>8 new this month</small>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">▣</div>
+        <div>
+          <span>Medical Records</span>
+          <strong>24</strong>
+          <small>Needs attention</small>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">▤</div>
+        <div>
+          <span>Prescriptions</span>
+          <strong>18</strong>
+          <small>This month</small>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="dashboard-grid">
+
+      <div class="dashboard-card appointments-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Today's Appointments</h2>
+            <p>Your scheduled appointments for today</p>
+          </div>
+
+          <a routerLink="/appointments" class="view-all">
+            View All
+          </a>
+        </div>
+
+        <div class="appointment-list">
+
+          <div class="appointment-row">
+            <div class="patient-avatar">RS</div>
+
+            <div class="appointment-info">
+              <strong>Rahul Sharma</strong>
+              <span>General Consultation</span>
+            </div>
+
+            <div class="appointment-time">
+              <strong>10:00 AM</strong>
+              <span>Room 102</span>
+            </div>
+
+            <span class="status confirmed">Confirmed</span>
+          </div>
+
+          <div class="appointment-row">
+            <div class="patient-avatar">PK</div>
+
+            <div class="appointment-info">
+              <strong>Priya Kumari</strong>
+              <span>Follow-up</span>
+            </div>
+
+            <div class="appointment-time">
+              <strong>11:30 AM</strong>
+              <span>Room 102</span>
+            </div>
+
+            <span class="status pending">Pending</span>
+          </div>
+
+          <div class="appointment-row">
+            <div class="patient-avatar">AK</div>
+
+            <div class="appointment-info">
+              <strong>Amit Kumar</strong>
+              <span>Medical Checkup</span>
+            </div>
+
+            <div class="appointment-time">
+              <strong>01:00 PM</strong>
+              <span>Room 104</span>
+            </div>
+
+            <span class="status confirmed">Confirmed</span>
+          </div>
+
+          <div class="appointment-row">
+            <div class="patient-avatar">NS</div>
+
+            <div class="appointment-info">
+              <strong>Neha Singh</strong>
+              <span>Consultation</span>
+            </div>
+
+            <div class="appointment-time">
+              <strong>03:30 PM</strong>
+              <span>Room 102</span>
+            </div>
+
+            <span class="status confirmed">Confirmed</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="dashboard-card quick-actions-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Quick Actions</h2>
+            <p>Frequently used actions</p>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+
+          <a routerLink="/patients" class="quick-action">
+            <span class="action-icon">♙</span>
+            <div>
+              <strong>My Patients</strong>
+              <span>View assigned patients</span>
+            </div>
+          </a>
+
+          <a routerLink="/appointments" class="quick-action">
+            <span class="action-icon">◷</span>
+            <div>
+              <strong>Appointments</strong>
+              <span>Manage appointments</span>
+            </div>
+          </a>
+
+          <a routerLink="/medical-records" class="quick-action">
+            <span class="action-icon">▣</span>
+            <div>
+              <strong>Medical Record</strong>
+              <span>Create patient record</span>
+            </div>
+          </a>
+
+          <a routerLink="/prescriptions" class="quick-action">
+            <span class="action-icon">▤</span>
+            <div>
+              <strong>Prescription</strong>
+              <span>Create prescription</span>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <section class="bottom-grid">
+
+      <div class="dashboard-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Recent Patients</h2>
+            <p>Your recently handled patients</p>
+          </div>
+
+          <a routerLink="/patients" class="view-all">
+            View All
+          </a>
+        </div>
+
+        <div class="patient-list">
+
+          <div class="patient-row">
+            <div class="patient-avatar">RS</div>
+            <div class="patient-details">
+              <strong>Rahul Sharma</strong>
+              <span>Male • 34 years</span>
+            </div>
+            <span class="blood-group">B+</span>
+          </div>
+
+          <div class="patient-row">
+            <div class="patient-avatar">PK</div>
+            <div class="patient-details">
+              <strong>Priya Kumari</strong>
+              <span>Female • 28 years</span>
+            </div>
+            <span class="blood-group">O+</span>
+          </div>
+
+          <div class="patient-row">
+            <div class="patient-avatar">AK</div>
+            <div class="patient-details">
+              <strong>Amit Kumar</strong>
+              <span>Male • 45 years</span>
+            </div>
+            <span class="blood-group">A+</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="dashboard-card">
+
+        <div class="card-header">
+          <div>
+            <h2>Recent Medical Records</h2>
+            <p>Latest patient records</p>
+          </div>
+
+          <a routerLink="/medical-records" class="view-all">
+            View All
+          </a>
+        </div>
+
+        <div class="record-list">
+
+          <div class="record-row">
+            <div class="record-icon">▣</div>
+            <div class="record-details">
+              <strong>Rahul Sharma</strong>
+              <span>General Consultation</span>
+            </div>
+            <span class="record-date">Today</span>
+          </div>
+
+          <div class="record-row">
+            <div class="record-icon">▣</div>
+            <div class="record-details">
+              <strong>Priya Kumari</strong>
+              <span>Follow-up Report</span>
+            </div>
+            <span class="record-date">Yesterday</span>
+          </div>
+
+          <div class="record-row">
+            <div class="record-icon">▣</div>
+            <div class="record-details">
+              <strong>Amit Kumar</strong>
+              <span>Health Checkup</span>
+            </div>
+            <span class="record-date">2 days ago</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>

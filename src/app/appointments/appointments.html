@@ -1,0 +1,358 @@
+<div class="appointments-page">
+
+  <!-- ========================= -->
+  <!-- PAGE HEADER -->
+  <!-- ========================= -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Appointments</h1>
+      <p>Schedule and manage hospital appointments</p>
+    </div>
+
+    <button
+      type="button"
+      class="add-appointment-btn"
+      (click)="openAddAppointment()">
+
+      <span>+</span>
+      Add Appointment
+
+    </button>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- STATISTICS -->
+  <!-- ========================= -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        📅
+      </div>
+
+      <div>
+        <span>Total Appointments</span>
+        <h2>{{ appointments.length }}</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🟢
+      </div>
+
+      <div>
+        <span>Confirmed</span>
+        <h2>1</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🟡
+      </div>
+
+      <div>
+        <span>Pending</span>
+        <h2>1</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        ✅
+      </div>
+
+      <div>
+        <span>Completed</span>
+        <h2>1</h2>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- APPOINTMENT DIRECTORY -->
+  <!-- ========================= -->
+
+  <div class="appointments-panel">
+
+    <div class="panel-header">
+
+      <div>
+        <h2>Appointment Directory</h2>
+        <p>View and manage scheduled appointments</p>
+      </div>
+
+
+      <div class="search-box">
+
+        <span>🔍</span>
+
+        <input
+          type="text"
+          placeholder="Search appointments..."
+          [(ngModel)]="searchTerm"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- TABLE -->
+    <!-- ========================= -->
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+        <tr>
+
+          <th>Patient</th>
+
+          <th>Doctor</th>
+
+          <th>Department</th>
+
+          <th>Date</th>
+
+          <th>Time</th>
+
+          <th>Status</th>
+
+          <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <tr
+          *ngFor="let appointment of filteredAppointments">
+
+          <!-- PATIENT -->
+
+          <td>
+
+            <div class="patient-info">
+
+              <div class="patient-avatar">
+
+                {{
+                  appointment.patientName.charAt(0).toUpperCase()
+                }}
+
+              </div>
+
+              <div>
+
+                <strong>
+                  {{ appointment.patientName }}
+                </strong>
+
+                <small>
+                  Appointment #{{ appointment.id }}
+                </small>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- DOCTOR -->
+
+          <td>
+
+            <strong>
+              {{ appointment.doctorName }}
+            </strong>
+
+          </td>
+
+
+          <!-- DEPARTMENT -->
+
+          <td>
+
+            {{ appointment.department }}
+
+          </td>
+
+
+          <!-- DATE -->
+
+          <td>
+
+            {{ appointment.date }}
+
+          </td>
+
+
+          <!-- TIME -->
+
+          <td>
+
+            <strong>
+              {{ appointment.time }}
+            </strong>
+
+          </td>
+
+
+          <!-- STATUS -->
+
+          <td>
+
+              <span
+                class="status"
+                [class.confirmed]="appointment.status === 'Confirmed'"
+                [class.pending]="appointment.status === 'Pending'"
+                [class.completed]="appointment.status === 'Completed'">
+
+                {{ appointment.status }}
+
+              </span>
+
+          </td>
+
+
+          <!-- ACTIONS -->
+
+          <td>
+
+            <div class="action-buttons">
+
+              <button
+                type="button"
+                class="action-btn view-btn"
+                title="View Appointment"
+                (click)="viewAppointment(appointment)">
+
+                👁
+
+              </button>
+
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                title="Edit Appointment">
+
+                ✏
+
+              </button>
+
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                title="Delete Appointment">
+
+                🗑
+
+              </button>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+
+        <!-- NO DATA -->
+
+        <tr
+          *ngIf="filteredAppointments.length === 0">
+
+          <td
+            colspan="7"
+            class="no-data">
+
+            <div>
+
+              <span>📅</span>
+
+              <h3>
+                No Appointments Found
+              </h3>
+
+              <p>
+                No appointments match your search.
+              </p>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- PAGINATION -->
+    <!-- ========================= -->
+
+    <div
+      class="pagination"
+      *ngIf="filteredAppointments.length > 0">
+
+      <span>
+        Showing {{ filteredAppointments.length }} appointments
+      </span>
+
+      <div class="page-buttons">
+
+        <button type="button">
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="active">
+
+          1
+
+        </button>
+
+        <button type="button">
+          ›
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

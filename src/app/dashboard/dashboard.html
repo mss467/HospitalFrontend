@@ -1,0 +1,766 @@
+<div
+  class="dashboard"
+  [class.sidebar-collapsed]="sidebarCollapsed"
+>
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar">
+
+    <!-- LOGO -->
+    <div class="logo">
+
+      <div class="logo-icon">
+        <img
+          src="/logo.jpeg"
+          alt="MedCare Logo"
+        >
+      </div>
+
+      <div class="logo-text">
+        <h2>MedCare</h2>
+        <span>Hospital Management</span>
+      </div>
+
+    </div>
+
+
+    <!-- SIDEBAR TOGGLE -->
+    <button
+      type="button"
+      class="sidebar-toggle"
+      (click)="toggleSidebar()"
+      [attr.title]="sidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'"
+    >
+      ☰
+    </button>
+
+
+    <!-- NAVIGATION -->
+    <nav>
+
+      <a
+        class="active"
+        routerLink="/dashboard"
+      >
+        📊
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/doctors">
+        👨‍⚕️
+        <span>Doctors</span>
+      </a>
+
+      <a routerLink="/patients">
+        🧑
+        <span>Patients</span>
+      </a>
+
+      <!-- APPOINTMENTS -->
+      <a routerLink="/appointments">
+        📅
+        <span>Appointments</span>
+      </a>
+
+      <a>
+        💊
+        <span>Pharmacy</span>
+      </a>
+
+      <a>
+        🧪
+        <span>Laboratory</span>
+      </a>
+
+      <a>
+        🛏️
+        <span>Wards & Beds</span>
+      </a>
+
+      <a>
+        💰
+        <span>Billing</span>
+      </a>
+
+      <a>
+        📋
+        <span>Medical Records</span>
+      </a>
+
+    </nav>
+
+
+    <!-- SIDEBAR BOTTOM -->
+    <div class="sidebar-bottom">
+
+      <a>
+        ⚙️
+        <span>Settings</span>
+      </a>
+
+      <a>
+        🚪
+        <span>Logout</span>
+      </a>
+
+    </div>
+
+  </aside>
+
+
+  <!-- ================= MAIN CONTENT ================= -->
+
+  <main class="main-content">
+
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+      <div>
+
+        <h1>
+          Dashboard
+        </h1>
+
+        <p>
+          Welcome back! Here's what's happening today.
+        </p>
+
+      </div>
+
+
+      <div class="profile">
+
+        <div class="notification">
+          🔔
+        </div>
+
+        <div class="avatar">
+          AD
+        </div>
+
+        <div>
+
+          <strong>
+            Admin
+          </strong>
+
+          <span>
+            Administrator
+          </span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <section class="stats-grid">
+
+
+      <!-- TOTAL PATIENTS -->
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          🧑‍🤝‍🧑
+        </div>
+
+        <div>
+
+          <span>
+            Total Patients
+          </span>
+
+          <h2>
+            1248
+          </h2>
+
+          <small>
+            +12% this month
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL DOCTORS -->
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          👨‍⚕️
+        </div>
+
+        <div>
+
+          <span>
+            Total Doctors
+          </span>
+
+          <h2>
+            {{ totalDoctors }}
+          </h2>
+
+          <small>
+            Active doctors
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- APPOINTMENTS -->
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          📅
+        </div>
+
+        <div>
+
+          <span>
+            Today's Appointments
+          </span>
+
+          <h2>
+            86
+          </h2>
+
+          <small>
+            +8% from yesterday
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <!-- REVENUE -->
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          💰
+        </div>
+
+        <div>
+
+          <span>
+            Monthly Revenue
+          </span>
+
+          <h2>
+            ₹8.4L
+          </h2>
+
+          <small>
+            +15% this month
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= APPOINTMENTS + QUICK ACTIONS ================= -->
+
+    <section class="content-grid">
+
+
+      <!-- APPOINTMENTS -->
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <h2>
+              Today's Appointments
+            </h2>
+
+            <p>
+              Upcoming patient appointments
+            </p>
+
+          </div>
+
+          <button routerLink="/appointments">
+            View All
+          </button>
+
+        </div>
+
+
+        <div class="appointment">
+
+          <div class="patient-avatar">
+            RS
+          </div>
+
+          <div class="appointment-info">
+
+            <strong>
+              Rahul Sharma
+            </strong>
+
+            <span>
+              General Medicine
+            </span>
+
+          </div>
+
+          <div class="appointment-time">
+
+            <strong>
+              10:00 AM
+            </strong>
+
+            <span>
+              Room 102
+            </span>
+
+          </div>
+
+          <span class="status confirmed">
+            Confirmed
+          </span>
+
+        </div>
+
+
+        <div class="appointment">
+
+          <div class="patient-avatar">
+            PK
+          </div>
+
+          <div class="appointment-info">
+
+            <strong>
+              Priya Kumari
+            </strong>
+
+            <span>
+              Cardiology
+            </span>
+
+          </div>
+
+          <div class="appointment-time">
+
+            <strong>
+              11:30 AM
+            </strong>
+
+            <span>
+              Room 205
+            </span>
+
+          </div>
+
+          <span class="status pending">
+            Pending
+          </span>
+
+        </div>
+
+
+        <div class="appointment">
+
+          <div class="patient-avatar">
+            AK
+          </div>
+
+          <div class="appointment-info">
+
+            <strong>
+              Amit Kumar
+            </strong>
+
+            <span>
+              Orthopedics
+            </span>
+
+          </div>
+
+          <div class="appointment-time">
+
+            <strong>
+              01:00 PM
+            </strong>
+
+            <span>
+              Room 301
+            </span>
+
+          </div>
+
+          <span class="status confirmed">
+            Confirmed
+          </span>
+
+        </div>
+
+
+        <div class="appointment">
+
+          <div class="patient-avatar">
+            NS
+          </div>
+
+          <div class="appointment-info">
+
+            <strong>
+              Neha Singh
+            </strong>
+
+            <span>
+              Dermatology
+            </span>
+
+          </div>
+
+          <div class="appointment-time">
+
+            <strong>
+              03:30 PM
+            </strong>
+
+            <span>
+              Room 110
+            </span>
+
+          </div>
+
+          <span class="status completed">
+            Completed
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUICK ACTIONS -->
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <h2>
+              Quick Actions
+            </h2>
+
+            <p>
+              Frequently used actions
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+          <button routerLink="/patients">
+
+            <span>
+              🧑
+            </span>
+
+            <div>
+
+              <strong>
+                Add Patient
+              </strong>
+
+              <small>
+                Register a new patient
+              </small>
+
+            </div>
+
+          </button>
+
+
+          <button routerLink="/doctors">
+
+            <span>
+              👨‍⚕️
+            </span>
+
+            <div>
+
+              <strong>
+                Add Doctor
+              </strong>
+
+              <small>
+                Register a new doctor
+              </small>
+
+            </div>
+
+          </button>
+
+
+          <button routerLink="/appointments">
+
+            <span>
+              📅
+            </span>
+
+            <div>
+
+              <strong>
+                New Appointment
+              </strong>
+
+              <small>
+                Schedule an appointment
+              </small>
+
+            </div>
+
+          </button>
+
+
+          <button>
+
+            <span>
+              💳
+            </span>
+
+            <div>
+
+              <strong>
+                Create Bill
+              </strong>
+
+              <small>
+                Generate patient bill
+              </small>
+
+            </div>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DOCTORS + HOSPITAL OVERVIEW ================= -->
+
+    <section class="bottom-grid">
+
+
+      <!-- DOCTORS ON DUTY -->
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <h2>
+              Doctors on Duty
+            </h2>
+
+            <p>
+              Currently available doctors
+            </p>
+
+          </div>
+
+          <button routerLink="/doctors">
+            View All
+          </button>
+
+        </div>
+
+
+        <div class="doctor-list">
+
+          <div
+            class="doctor"
+            *ngFor="let doctor of doctors"
+          >
+
+            <div class="doctor-avatar">
+              {{ getDoctorInitials(doctor.fullName) }}
+            </div>
+
+            <div>
+
+              <strong>
+                {{ doctor.fullName }}
+              </strong>
+
+              <span>
+                {{ doctor.specialization }}
+              </span>
+
+            </div>
+
+            <span class="online">
+              ● Online
+            </span>
+
+          </div>
+
+
+          <div
+            *ngIf="doctors.length === 0"
+            style="padding: 20px 0; color: #6b7280; text-align: center;"
+          >
+            No doctors available.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- HOSPITAL OVERVIEW -->
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <h2>
+              Hospital Overview
+            </h2>
+
+            <p>
+              Current bed capacity
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- GENERAL WARD -->
+        <div class="capacity">
+
+          <div>
+
+            <span>
+              General Ward
+            </span>
+
+            <strong>
+              71%
+            </strong>
+
+          </div>
+
+          <div class="progress">
+
+            <div class="progress-bar"></div>
+
+          </div>
+
+          <div class="capacity-details">
+
+            <span>
+              142 occupied
+            </span>
+
+            <span>
+              200 beds
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- ICU -->
+        <div class="capacity">
+
+          <div>
+
+            <span>
+              ICU
+            </span>
+
+            <strong>
+              72%
+            </strong>
+
+          </div>
+
+          <div class="progress">
+
+            <div class="progress-bar icu"></div>
+
+          </div>
+
+          <div class="capacity-details">
+
+            <span>
+              36 occupied
+            </span>
+
+            <span>
+              50 beds
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- EMERGENCY -->
+        <div class="capacity">
+
+          <div>
+
+            <span>
+              Emergency
+            </span>
+
+            <strong>
+              60%
+            </strong>
+
+          </div>
+
+          <div class="progress">
+
+            <div class="progress-bar"></div>
+
+          </div>
+
+          <div class="capacity-details">
+
+            <span>
+              18 occupied
+            </span>
+
+            <span>
+              30 beds
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>

@@ -1,0 +1,1099 @@
+<div class="patients-page">
+
+  <!-- ========================= -->
+  <!-- PAGE HEADER -->
+  <!-- ========================= -->
+
+  <div class="page-header">
+
+    <div>
+      <h1>Patients</h1>
+      <p>Manage and monitor hospital patients</p>
+    </div>
+
+    <button
+      type="button"
+      class="add-patient-btn"
+      (click)="openAddPatient()">
+
+      <span>+</span>
+      Add Patient
+
+    </button>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- STATISTICS -->
+  <!-- ========================= -->
+
+  <div class="stats-grid">
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        👥
+      </div>
+
+      <div>
+        <span>Total Patients</span>
+        <h2>{{ patients.length }}</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🟢
+      </div>
+
+      <div>
+        <span>Active Patients</span>
+        <h2>{{ patients.length }}</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🩺
+      </div>
+
+      <div>
+        <span>New Patients</span>
+        <h2>{{ patients.length }}</h2>
+      </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon">
+        🏥
+      </div>
+
+      <div>
+        <span>Hospital Patients</span>
+        <h2>{{ patients.length }}</h2>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ========================= -->
+  <!-- PATIENT DIRECTORY -->
+  <!-- ========================= -->
+
+  <div class="patients-panel">
+
+    <!-- PANEL HEADER -->
+
+    <div class="panel-header">
+
+      <div>
+
+        <h2>
+          Patient Directory
+        </h2>
+
+        <p>
+          View and manage registered patients
+        </p>
+
+      </div>
+
+
+      <div class="panel-actions">
+
+        <div class="search-box">
+
+          <span>
+            🔍
+          </span>
+
+          <input
+            type="text"
+            placeholder="Search patients..."
+            [(ngModel)]="searchTerm"
+          />
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- TABLE -->
+    <!-- ========================= -->
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+        <tr>
+
+          <th>
+            Patient
+          </th>
+
+          <th>
+            Age
+          </th>
+
+          <th>
+            Gender
+          </th>
+
+          <th>
+            Blood Group
+          </th>
+
+          <th>
+            Phone
+          </th>
+
+          <th>
+            Address
+          </th>
+
+          <th>
+            Status
+          </th>
+
+          <th>
+            Actions
+          </th>
+
+        </tr>
+
+        </thead>
+
+
+        <tbody>
+
+        <!-- ========================= -->
+        <!-- PATIENT ROW -->
+        <!-- ========================= -->
+
+        <tr
+          *ngFor="let patient of filteredPatients">
+
+          <!-- PATIENT -->
+
+          <td>
+
+            <div class="patient-info">
+
+              <div class="patient-avatar">
+
+                {{
+                  patient.fullName
+                    ? patient.fullName.charAt(0).toUpperCase()
+                    : 'P'
+                }}
+
+              </div>
+
+
+              <div>
+
+                <strong>
+                  {{ patient.fullName }}
+                </strong>
+
+                <small>
+                  Patient ID: #{{ patient.patientId }}
+                </small>
+
+              </div>
+
+            </div>
+
+          </td>
+
+
+          <!-- AGE -->
+
+          <td>
+
+            {{ patient.age || '-' }}
+
+          </td>
+
+
+          <!-- GENDER -->
+
+          <td>
+
+            {{ patient.gender || '-' }}
+
+          </td>
+
+
+          <!-- BLOOD GROUP -->
+
+          <td>
+
+            <strong>
+              {{ patient.bloodGroup || '-' }}
+            </strong>
+
+          </td>
+
+
+          <!-- PHONE -->
+
+          <td>
+
+            {{ patient.phone || '-' }}
+
+          </td>
+
+
+          <!-- ADDRESS -->
+
+          <td
+            title="{{ patient.address || '' }}">
+
+            {{ patient.address || '-' }}
+
+          </td>
+
+
+          <!-- STATUS -->
+
+          <td>
+
+            <span class="status active">
+              Active
+            </span>
+
+          </td>
+
+
+          <!-- ACTIONS -->
+
+          <td>
+
+            <div class="action-buttons">
+
+              <!-- VIEW -->
+
+              <button
+                type="button"
+                class="action-btn view-btn"
+                title="View Patient"
+                (click)="viewPatient(patient)">
+
+                👁
+
+              </button>
+
+
+              <!-- EDIT -->
+
+              <button
+                type="button"
+                class="action-btn edit-btn"
+                title="Edit Patient"
+                (click)="openEditPatient(patient)">
+
+                ✏
+
+              </button>
+
+
+              <!-- DELETE -->
+
+              <button
+                type="button"
+                class="action-btn delete-btn"
+                title="Delete Patient"
+                (click)="deletePatient(patient)">
+
+                🗑
+
+              </button>
+
+
+            </div>
+
+          </td>
+
+        </tr>
+
+
+        <!-- ========================= -->
+        <!-- NO DATA -->
+        <!-- ========================= -->
+
+        <tr
+          *ngIf="filteredPatients.length === 0">
+
+          <td
+            colspan="8"
+            class="no-data">
+
+            <div>
+
+              <span>
+                👥
+              </span>
+
+              <h3>
+                No Patients Found
+              </h3>
+
+              <p>
+                {{
+                  searchTerm
+                    ? 'No patients match your search.'
+                    : 'There are currently no registered patients.'
+                }}
+              </p>
+
+            </div>
+
+          </td>
+
+        </tr>
+
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- PAGINATION -->
+    <!-- ========================= -->
+
+    <div
+      class="pagination"
+      *ngIf="filteredPatients.length > 0">
+
+      <span>
+        Showing {{ filteredPatients.length }} patients
+      </span>
+
+
+      <div class="page-buttons">
+
+        <button type="button">
+          ‹
+        </button>
+
+        <button
+          type="button"
+          class="active">
+
+          1
+
+        </button>
+
+        <button type="button">
+          ›
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- ADD PATIENT MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showAddPatient">
+
+  <div class="modal">
+
+    <!-- MODAL HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          Add Patient
+        </h2>
+
+        <p>
+          Enter patient information
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeAddPatient()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- MODAL BODY -->
+
+    <div class="modal-body">
+
+      <!-- NAME + EMAIL -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            placeholder="Enter patient name"
+            [(ngModel)]="patient.fullName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Email
+          </label>
+
+          <input
+            type="email"
+            placeholder="Enter email"
+            [(ngModel)]="patient.email"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- PHONE + GENDER -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Phone
+          </label>
+
+          <input
+            type="text"
+            placeholder="Enter phone number"
+            [(ngModel)]="patient.phone"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Gender
+          </label>
+
+          <select
+            [(ngModel)]="patient.gender">
+
+            <option value="">
+              Select Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- AGE + BLOOD GROUP -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Age
+          </label>
+
+          <input
+            type="number"
+            placeholder="Enter age"
+            [(ngModel)]="patient.age"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Blood Group
+          </label>
+
+          <select
+            [(ngModel)]="patient.bloodGroup">
+
+            <option value="">
+              Select Blood Group
+            </option>
+
+            <option value="A+">
+              A+
+            </option>
+
+            <option value="A-">
+              A-
+            </option>
+
+            <option value="B+">
+              B+
+            </option>
+
+            <option value="B-">
+              B-
+            </option>
+
+            <option value="AB+">
+              AB+
+            </option>
+
+            <option value="AB-">
+              AB-
+            </option>
+
+            <option value="O+">
+              O+
+            </option>
+
+            <option value="O-">
+              O-
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADDRESS -->
+
+      <div class="form-group">
+
+        <label>
+          Address
+        </label>
+
+        <textarea
+          rows="3"
+          placeholder="Enter complete patient address"
+          [(ngModel)]="patient.address">
+        </textarea>
+
+      </div>
+
+    </div>
+
+
+    <!-- MODAL FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeAddPatient()">
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="save-btn"
+        (click)="addPatient()">
+
+        Add Patient
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- VIEW PATIENT MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showViewPatient">
+
+  <div class="modal">
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          Patient Details
+        </h2>
+
+        <p>
+          Complete patient information
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeViewPatient()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div
+      class="modal-body"
+      *ngIf="selectedPatient">
+
+      <!-- ID + NAME -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Patient ID
+          </label>
+
+          <input
+            type="text"
+            [value]="'#' + selectedPatient.patientId"
+            readonly
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            [value]="selectedPatient.fullName || '-'"
+            readonly
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- AGE + GENDER -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Age
+          </label>
+
+          <input
+            type="text"
+            [value]="selectedPatient.age || '-'"
+            readonly
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Gender
+          </label>
+
+          <input
+            type="text"
+            [value]="selectedPatient.gender || '-'"
+            readonly
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- BLOOD GROUP + PHONE -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Blood Group
+          </label>
+
+          <input
+            type="text"
+            [value]="selectedPatient.bloodGroup || '-'"
+            readonly
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Phone
+          </label>
+
+          <input
+            type="text"
+            [value]="selectedPatient.phone || '-'"
+            readonly
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- ADDRESS -->
+
+      <div class="form-group">
+
+        <label>
+          Address
+        </label>
+
+        <textarea
+          rows="4"
+          [value]="selectedPatient.address || '-'"
+          readonly>
+        </textarea>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeViewPatient()">
+
+        Close
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ===================================================== -->
+<!-- EDIT PATIENT MODAL -->
+<!-- ===================================================== -->
+
+<div
+  class="modal-overlay"
+  *ngIf="showEditPatient">
+
+  <div class="modal">
+
+    <!-- HEADER -->
+
+    <div class="modal-header">
+
+      <div>
+
+        <h2>
+          Edit Patient
+        </h2>
+
+        <p>
+          Update patient information
+        </p>
+
+      </div>
+
+
+      <button
+        type="button"
+        class="close-btn"
+        (click)="closeEditPatient()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="modal-body">
+
+      <!-- NAME + PHONE -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            placeholder="Enter patient name"
+            [(ngModel)]="editPatient.fullName"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Phone
+          </label>
+
+          <input
+            type="text"
+            placeholder="Enter phone number"
+            [(ngModel)]="editPatient.phone"
+          />
+
+        </div>
+
+      </div>
+
+
+      <!-- AGE + GENDER -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Age
+          </label>
+
+          <input
+            type="number"
+            placeholder="Enter age"
+            [(ngModel)]="editPatient.age"
+          />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Gender
+          </label>
+
+          <select
+            [(ngModel)]="editPatient.gender">
+
+            <option value="">
+              Select Gender
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- BLOOD GROUP -->
+
+      <div class="form-row">
+
+        <div class="form-group">
+
+          <label>
+            Blood Group
+          </label>
+
+          <select
+            [(ngModel)]="editPatient.bloodGroup">
+
+            <option value="">
+              Select Blood Group
+            </option>
+
+            <option value="A+">
+              A+
+            </option>
+
+            <option value="A-">
+              A-
+            </option>
+
+            <option value="B+">
+              B+
+            </option>
+
+            <option value="B-">
+              B-
+            </option>
+
+            <option value="AB+">
+              AB+
+            </option>
+
+            <option value="AB-">
+              AB-
+            </option>
+
+            <option value="O+">
+              O+
+            </option>
+
+            <option value="O-">
+              O-
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- ADDRESS -->
+
+      <div class="form-group">
+
+        <label>
+          Address
+        </label>
+
+        <textarea
+          rows="4"
+          placeholder="Enter complete patient address"
+          [(ngModel)]="editPatient.address">
+        </textarea>
+
+      </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="modal-footer">
+
+      <button
+        type="button"
+        class="cancel-btn"
+        (click)="closeEditPatient()">
+
+        Cancel
+
+      </button>
+
+
+      <button
+        type="button"
+        class="save-btn"
+        (click)="updatePatient()">
+
+        Update Patient
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
