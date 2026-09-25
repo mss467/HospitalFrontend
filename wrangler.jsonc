@@ -3,7 +3,7 @@
   "name": "hospitalfrontend",
   "compatibility_date": "2026-09-25",
   "assets": {
-    "directory": "./dist/hospital-frontend",
+    "directory": "./dist/hospital-frontend/browser",
     "not_found_handling": "single-page-application"
   }
 }
