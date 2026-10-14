@@ -6,35 +6,27 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://somebody-judge-sure-optional.trycloudflare.com/api/auth';
+  private apiUrl = 'https://surfaces-valuation-preliminary-downtown.trycloudflare.com/api/auth';
 
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http
-      .post<any>(`${this.apiUrl}/login`, {
-        username,
-        password,
-      })
-      .pipe(
-        tap((response) => {
-          if (response && response.token) {
-            this.setToken(response.token);
-          }
-
-          if (response && response.userId) {
-            this.setUserId(response.userId);
-          }
-
-          if (response && response.username) {
-            this.setUsername(response.username);
-          }
-
-          if (response && response.role) {
-            this.setRole(response.role);
-          }
-        }),
-      );
+    return this.http.post<any>(`${this.apiUrl}/login`, { username, password }).pipe(
+      tap((response) => {
+        if (response?.token) {
+          this.setToken(response.token);
+        }
+        if (response?.userId) {
+          this.setUserId(response.userId);
+        }
+        if (response?.username) {
+          this.setUsername(response.username);
+        }
+        if (response?.role) {
+          this.setRole(response.role);
+        }
+      }),
+    );
   }
 
   register(username: string, password: string, role: string): Observable<any> {
