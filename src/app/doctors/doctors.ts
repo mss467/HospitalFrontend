@@ -4,570 +4,328 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-doctors',
-  standalone: true,
-  imports: [FormsModule, CommonModule],
-  styleUrl: './doctors.css',
-  templateUrl: './doctors.html',
+    selector: 'app-doctors',
+    standalone: true,
+    imports: [FormsModule, CommonModule],
+    styleUrl: './doctors.css',
+    templateUrl: './doctors.html',
 })
 export class Doctors implements OnInit {
+    private apiUrl = 'https://raleigh-nicholas-moment-secretariat.trycloudflare.com/api/doctors';
 
-  showAddDoctor = false;
-  showViewDoctor = false;
-  showEditDoctor = false;
+    showAddDoctor = false;
+    showViewDoctor = false;
+    showEditDoctor = false;
+    showSuccessPopup = false;
 
-  showSuccessPopup = false;
+    successTitle = '';
+    successMessage = '';
+    successUsername = '';
+    successPassword = '';
 
-  successTitle = '';
-  successMessage = '';
-  successUsername = '';
-  successPassword = '';
+    doctors: any[] = [];
+    filteredDoctors: any[] = [];
+    selectedDoctor: any = null;
 
-  doctors: any[] = [];
-  filteredDoctors: any[] = [];
+    searchText = '';
+    selectedDepartment = '';
 
-  selectedDoctor: any = null;
+    doctor = {
+        name: '',
+        email: '',
+        phone: '',
+        specialization: '',
+        department: '',
+        experience: '',
+        gender: '',
+        fee: '',
+    };
 
-  searchText = '';
-  selectedDepartment = '';
+    editDoctor: any = {
+        doctorId: null,
+        fullName: '',
+        email: '',
+        phone: '',
+        specialization: '',
+        department: '',
+        experienceYears: '',
+        gender: '',
+        fee: '',
+    };
 
-  doctor = {
-    name: '',
-    email: '',
-    phone: '',
-    specialization: '',
-    department: '',
-    experience: '',
-    gender: '',
-    fee: '',
-  };
+    constructor(
+        private http: HttpClient,
+        private cdr: ChangeDetectorRef,
+    ) {}
 
-  editDoctor: any = {
-    doctorId: null,
-    fullName: '',
-    email: '',
-    phone: '',
-    specialization: '',
-    department: '',
-    experienceYears: '',
-    gender: '',
-    fee: '',
-  };
+    ngOnInit(): void {
+        this.loadDoctors();
+    }
 
-  constructor(
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef,
-  ) {}
+    loadDoctors(): void {
+        this.http.get<any[]>(this.apiUrl).subscribe({
+            next: (response) => {
+                this.doctors = response || [];
+                this.applyFilters();
+                this.cdr.detectChanges();
+            },
+            error: (error) => {
+                console.error('Error loading doctors:', error);
+                this.doctors = [];
+                this.filteredDoctors = [];
+                this.cdr.detectChanges();
+                alert('Failed to load doctors from server.');
+            },
+        });
+    }
 
-  ngOnInit(): void {
-    this.loadDoctors();
-  }
+    applyFilters(): void {
+        const search = this.searchText.trim().toLowerCase();
 
+        this.filteredDoctors = this.doctors.filter((doctorItem) => {
+            const fullName = String(doctorItem.fullName || '').toLowerCase();
+            const email = String(doctorItem.email || '').toLowerCase();
+            const phone = String(doctorItem.phone || '').toLowerCase();
+            const specialization = String(doctorItem.specialization || '').toLowerCase();
+            const department = String(doctorItem.department || '').toLowerCase();
 
-  /* ===================================================== */
-  /* LOAD DOCTORS */
-  /* ===================================================== */
+            const matchesSearch =
+                !search ||
+                fullName.includes(search) ||
+                email.includes(search) ||
+                phone.includes(search) ||
+                specialization.includes(search) ||
+                department.includes(search);
 
-  loadDoctors(): void {
-    console.log('Loading doctors...');
+            const matchesDepartment =
+                !this.selectedDepartment ||
+                doctorItem.department === this.selectedDepartment;
 
-    this.http.get<any[]>('http://localhost:8080/api/doctors').subscribe({
-      next: (response) => {
-        console.log('Doctors loaded:', response);
+            return matchesSearch && matchesDepartment;
+        });
+    }
 
-        this.doctors = response || [];
+    getDoctorInitials(name: string): string {
+        if (!name) {
+            return 'DR';
+        }
 
-        this.applyFilters();
+        const parts = name.trim().split(/\s+/);
 
+        if (parts.length === 1) {
+            return parts[0].substring(0, 2).toUpperCase();
+        }
+
+        return (
+            parts[0].charAt(0) +
+            parts[parts.length - 1].charAt(0)
+        ).toUpperCase();
+    }
+
+    openAddDoctor(): void {
+        this.showAddDoctor = true;
         this.cdr.detectChanges();
-      },
+    }
 
-      error: (error) => {
-        console.error('Error loading doctors:', error);
-
-        this.doctors = [];
-        this.filteredDoctors = [];
-
+    closeAddDoctor(): void {
+        this.showAddDoctor = false;
         this.cdr.detectChanges();
-
-        alert('Failed to load doctors from server.');
-      },
-    });
-  }
-
-
-  /* ===================================================== */
-  /* FILTERS */
-  /* ===================================================== */
-
-  applyFilters(): void {
-    const search = this.searchText.trim().toLowerCase();
-
-    this.filteredDoctors = this.doctors.filter((doctorItem) => {
-
-      const fullName = String(
-        doctorItem.fullName || ''
-      ).toLowerCase();
-
-      const email = String(
-        doctorItem.email || ''
-      ).toLowerCase();
-
-      const phone = String(
-        doctorItem.phone || ''
-      ).toLowerCase();
-
-      const specialization = String(
-        doctorItem.specialization || ''
-      ).toLowerCase();
-
-      const department = String(
-        doctorItem.department || ''
-      ).toLowerCase();
-
-      const matchesSearch =
-        !search ||
-        fullName.includes(search) ||
-        email.includes(search) ||
-        phone.includes(search) ||
-        specialization.includes(search) ||
-        department.includes(search);
-
-      const matchesDepartment =
-        !this.selectedDepartment ||
-        doctorItem.department === this.selectedDepartment;
-
-      return matchesSearch && matchesDepartment;
-    });
-  }
-
-
-  /* ===================================================== */
-  /* DOCTOR INITIALS */
-  /* ===================================================== */
-
-  getDoctorInitials(name: string): string {
-
-    if (!name) {
-      return 'DR';
     }
 
-    const parts = name.trim().split(/\s+/);
-
-    if (parts.length === 1) {
-      return parts[0]
-        .substring(0, 2)
-        .toUpperCase();
+    viewDoctor(doctorItem: any): void {
+        this.selectedDoctor = { ...doctorItem };
+        this.showViewDoctor = true;
+        this.cdr.detectChanges();
     }
 
-    return (
-      parts[0].charAt(0) +
-      parts[parts.length - 1].charAt(0)
-    ).toUpperCase();
-  }
-
-
-  /* ===================================================== */
-  /* ADD DOCTOR MODAL */
-  /* ===================================================== */
-
-  openAddDoctor(): void {
-    console.log('Opening Add Doctor modal');
-
-    this.showAddDoctor = true;
-
-    this.cdr.detectChanges();
-  }
-
-
-  closeAddDoctor(): void {
-    console.log('Closing Add Doctor modal');
-
-    this.showAddDoctor = false;
-
-    this.cdr.detectChanges();
-  }
-
-
-  /* ===================================================== */
-  /* VIEW DOCTOR */
-  /* ===================================================== */
-
-  viewDoctor(doctorItem: any): void {
-    console.log('Opening View Doctor:', doctorItem);
-
-    this.selectedDoctor = {
-      ...doctorItem,
-    };
-
-    this.showViewDoctor = true;
-
-    this.cdr.detectChanges();
-  }
-
-
-  closeViewDoctor(): void {
-    console.log('Closing View Doctor');
-
-    this.showViewDoctor = false;
-    this.selectedDoctor = null;
-
-    this.cdr.detectChanges();
-  }
-
-
-  /* ===================================================== */
-  /* EDIT DOCTOR */
-  /* ===================================================== */
-
-  openEditDoctor(doctorItem: any): void {
-    console.log('Opening Edit Doctor:', doctorItem);
-
-    this.editDoctor = {
-      doctorId: doctorItem.doctorId,
-      fullName: doctorItem.fullName || '',
-      email: doctorItem.email || '',
-      phone: doctorItem.phone || '',
-      specialization: doctorItem.specialization || '',
-      department: doctorItem.department || '',
-      experienceYears: doctorItem.experienceYears ?? '',
-      gender: doctorItem.gender || '',
-      fee: doctorItem.fee ?? '',
-    };
-
-    this.showEditDoctor = true;
-
-    this.cdr.detectChanges();
-  }
-
-
-  closeEditDoctor(): void {
-    console.log('Closing Edit Doctor');
-
-    this.showEditDoctor = false;
-
-    this.cdr.detectChanges();
-  }
-
-
-  /* ===================================================== */
-  /* UPDATE DOCTOR */
-  /* ===================================================== */
-
-  updateDoctor(): void {
-
-    console.log('Save Changes clicked');
-
-    if (!this.editDoctor.doctorId) {
-      alert('Doctor ID is missing. Cannot update doctor.');
-      return;
+    closeViewDoctor(): void {
+        this.showViewDoctor = false;
+        this.selectedDoctor = null;
+        this.cdr.detectChanges();
     }
 
-    if (
-      !this.editDoctor.fullName ||
-      !this.editDoctor.fullName.trim()
-    ) {
-      alert('Doctor name is required!');
-      return;
+    openEditDoctor(doctorItem: any): void {
+        this.editDoctor = {
+            doctorId: doctorItem.doctorId,
+            fullName: doctorItem.fullName || '',
+            email: doctorItem.email || '',
+            phone: doctorItem.phone || '',
+            specialization: doctorItem.specialization || '',
+            department: doctorItem.department || '',
+            experienceYears: doctorItem.experienceYears ?? '',
+            gender: doctorItem.gender || '',
+            fee: doctorItem.fee ?? '',
+        };
+
+        this.showEditDoctor = true;
+        this.cdr.detectChanges();
     }
 
-    const doctorData = {
-      fullName: this.editDoctor.fullName.trim(),
-      email: this.editDoctor.email || '',
-      phone: this.editDoctor.phone || '',
-      specialization: this.editDoctor.specialization || '',
-      department: this.editDoctor.department || '',
-      experienceYears:
-        this.editDoctor.experienceYears === ''
-          ? 0
-          : Number(this.editDoctor.experienceYears),
-      gender: this.editDoctor.gender || '',
-      fee:
-        this.editDoctor.fee === ''
-          ? 0
-          : Number(this.editDoctor.fee),
-    };
-
-    console.log(
-      'Updating doctor:',
-      this.editDoctor.doctorId
-    );
-
-    console.log(
-      'Doctor data:',
-      doctorData
-    );
-
-    this.http
-      .put<any>(
-        `http://localhost:8080/api/doctors/${this.editDoctor.doctorId}`,
-        doctorData,
-      )
-      .subscribe({
-
-        next: (response) => {
-          console.log(
-            'Doctor updated successfully:',
-            response
-          );
-
-          this.showEditDoctor = false;
-
-          this.cdr.detectChanges();
-
-          this.loadDoctors();
-
-          this.openSuccessPopup(
-            'Doctor Updated',
-            'Doctor information has been updated successfully.',
-          );
-        },
-
-        error: (error) => {
-          console.error(
-            'Error updating doctor:',
-            error
-          );
-
-          if (error.status === 404) {
-
-            alert(
-              'Doctor not found. The selected doctor may have already been deleted.'
-            );
-
-          } else if (error.status === 400) {
-
-            alert(
-              'Invalid doctor information. Please check the entered details.'
-            );
-
-          } else {
-
-            alert(
-              'Failed to update doctor. Please check the backend.'
-            );
-          }
-        },
-      });
-  }
-
-
-  /* ===================================================== */
-  /* ADD DOCTOR */
-  /* ===================================================== */
-
-  addDoctor(): void {
-
-    console.log('Add Doctor clicked');
-
-    if (
-      !this.doctor.name ||
-      !this.doctor.name.trim()
-    ) {
-      alert('Doctor name is required!');
-      return;
+    closeEditDoctor(): void {
+        this.showEditDoctor = false;
+        this.cdr.detectChanges();
     }
 
-    const doctorData = {
-      fullName: this.doctor.name.trim(),
-      email: this.doctor.email || '',
-      phone: this.doctor.phone || '',
-      specialization: this.doctor.specialization || '',
-      department: this.doctor.department || '',
-      gender: this.doctor.gender || '',
-      experienceYears:
-        this.doctor.experience === ''
-          ? 0
-          : Number(this.doctor.experience),
-      fee:
-        this.doctor.fee === ''
-          ? 0
-          : Number(this.doctor.fee),
-    };
+    updateDoctor(): void {
+        if (!this.editDoctor.doctorId) {
+            alert('Doctor ID is missing. Cannot update doctor.');
+            return;
+        }
 
-    console.log(
-      'Sending doctor data:',
-      doctorData
-    );
+        if (!this.editDoctor.fullName || !this.editDoctor.fullName.trim()) {
+            alert('Doctor name is required!');
+            return;
+        }
 
-    this.http
-      .post<any>(
-        'http://localhost:8080/api/doctors',
-        doctorData,
-      )
-      .subscribe({
+        const doctorData = {
+            fullName: this.editDoctor.fullName.trim(),
+            email: this.editDoctor.email || '',
+            phone: this.editDoctor.phone || '',
+            specialization: this.editDoctor.specialization || '',
+            department: this.editDoctor.department || '',
+            experienceYears:
+                this.editDoctor.experienceYears === ''
+                    ? 0
+                    : Number(this.editDoctor.experienceYears),
+            gender: this.editDoctor.gender || '',
+            fee: this.editDoctor.fee === '' ? 0 : Number(this.editDoctor.fee),
+        };
 
-        next: (response) => {
-          console.log(
-            'Doctor added:',
-            response
-          );
+        this.http
+            .put<any>(`${this.apiUrl}/${this.editDoctor.doctorId}`, doctorData)
+            .subscribe({
+                next: () => {
+                    this.showEditDoctor = false;
+                    this.loadDoctors();
+                    this.openSuccessPopup(
+                        'Doctor Updated',
+                        'Doctor information has been updated successfully.',
+                    );
+                },
+                error: (error) => {
+                    console.error('Error updating doctor:', error);
 
-          this.showAddDoctor = false;
-
-          this.doctor = {
-            name: '',
-            email: '',
-            phone: '',
-            specialization: '',
-            department: '',
-            experience: '',
-            gender: '',
-            fee: '',
-          };
-
-          this.cdr.detectChanges();
-
-          this.loadDoctors();
-
-          this.openSuccessPopup(
-            'Doctor Added Successfully',
-            'The doctor has been registered successfully.',
-            response?.username || '',
-            response?.temporaryPassword || '',
-          );
-        },
-
-        error: (error) => {
-          console.error(
-            'Error adding doctor:',
-            error
-          );
-
-          alert(
-            'Failed to add doctor. Please check the backend.'
-          );
-        },
-      });
-  }
-
-
-  /* ===================================================== */
-  /* DELETE DOCTOR */
-  /* ===================================================== */
-
-  deleteDoctor(doctorItem: any): void {
-
-    console.log(
-      'Delete clicked:',
-      doctorItem
-    );
-
-    const doctorName =
-      doctorItem.fullName || 'this doctor';
-
-    const doctorId =
-      doctorItem.doctorId;
-
-    if (!doctorId) {
-      alert(
-        'Doctor ID is missing. Cannot delete doctor.'
-      );
-      return;
+                    if (error.status === 404) {
+                        alert('Doctor not found. The selected doctor may have already been deleted.');
+                    } else if (error.status === 400) {
+                        alert('Invalid doctor information. Please check the entered details.');
+                    } else {
+                        alert('Failed to update doctor. Please check the backend.');
+                    }
+                },
+            });
     }
 
-    const confirmed = confirm(
-      `Are you sure you want to delete ${doctorName}?\n\n` +
-      `This will permanently remove the doctor and their login account.`,
-    );
+    addDoctor(): void {
+        if (!this.doctor.name || !this.doctor.name.trim()) {
+            alert('Doctor name is required!');
+            return;
+        }
 
-    if (!confirmed) {
-      return;
+        const doctorData = {
+            fullName: this.doctor.name.trim(),
+            email: this.doctor.email || '',
+            phone: this.doctor.phone || '',
+            specialization: this.doctor.specialization || '',
+            department: this.doctor.department || '',
+            gender: this.doctor.gender || '',
+            experienceYears:
+                this.doctor.experience === ''
+                    ? 0
+                    : Number(this.doctor.experience),
+            fee: this.doctor.fee === '' ? 0 : Number(this.doctor.fee),
+        };
+
+        this.http.post<any>(this.apiUrl, doctorData).subscribe({
+            next: (response) => {
+                this.showAddDoctor = false;
+
+                this.doctor = {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    specialization: '',
+                    department: '',
+                    experience: '',
+                    gender: '',
+                    fee: '',
+                };
+
+                this.loadDoctors();
+
+                this.openSuccessPopup(
+                    'Doctor Added Successfully',
+                    'The doctor has been registered successfully.',
+                    response?.username || '',
+                    response?.temporaryPassword || '',
+                );
+            },
+            error: (error) => {
+                console.error('Error adding doctor:', error);
+                alert('Failed to add doctor. Please check the backend.');
+            },
+        });
     }
 
-    console.log(
-      'Deleting doctor ID:',
-      doctorId
-    );
+    deleteDoctor(doctorItem: any): void {
+        const doctorName = doctorItem.fullName || 'this doctor';
+        const doctorId = doctorItem.doctorId;
 
-    this.http
-      .delete(
-        `http://localhost:8080/api/doctors/${doctorId}`,
-        {
-          responseType: 'text',
-        },
-      )
-      .subscribe({
+        if (!doctorId) {
+            alert('Doctor ID is missing. Cannot delete doctor.');
+            return;
+        }
 
-        next: (response) => {
+        const confirmed = confirm(
+            `Are you sure you want to delete ${doctorName}?\n\nThis will permanently remove the doctor and their login account.`,
+        );
 
-          console.log(
-            'Doctor deleted:',
-            response
-          );
+        if (!confirmed) {
+            return;
+        }
 
-          this.loadDoctors();
+        this.http
+            .delete(`${this.apiUrl}/${doctorId}`, { responseType: 'text' })
+            .subscribe({
+                next: () => {
+                    this.loadDoctors();
+                    this.openSuccessPopup(
+                        'Doctor Deleted',
+                        `${doctorName} has been removed successfully.`,
+                    );
+                },
+                error: (error) => {
+                    console.error('Error deleting doctor:', error);
 
-          this.openSuccessPopup(
-            'Doctor Deleted',
-            `${doctorName} has been removed successfully.`,
-          );
-        },
+                    if (error.status === 404) {
+                        alert('Doctor not found. The doctor may have already been deleted.');
+                    } else {
+                        alert('Failed to delete doctor. Please check the backend.');
+                    }
+                },
+            });
+    }
 
-        error: (error) => {
+    openSuccessPopup(
+        title: string,
+        message: string,
+        username: string = '',
+        password: string = '',
+    ): void {
+        this.successTitle = title;
+        this.successMessage = message;
+        this.successUsername = username;
+        this.successPassword = password;
+        this.showSuccessPopup = true;
+        this.cdr.detectChanges();
+    }
 
-          console.error(
-            'Error deleting doctor:',
-            error
-          );
-
-          if (error.status === 404) {
-
-            alert(
-              'Doctor not found. The doctor may have already been deleted.'
-            );
-
-          } else {
-
-            alert(
-              'Failed to delete doctor. Please check the backend.'
-            );
-          }
-        },
-      });
-  }
-
-
-  /* ===================================================== */
-  /* SUCCESS POPUP */
-  /* ===================================================== */
-
-  openSuccessPopup(
-    title: string,
-    message: string,
-    username: string = '',
-    password: string = '',
-  ): void {
-
-    console.log(
-      'Opening success popup:',
-      title
-    );
-
-    this.successTitle = title;
-    this.successMessage = message;
-    this.successUsername = username;
-    this.successPassword = password;
-
-    this.showSuccessPopup = true;
-
-    this.cdr.detectChanges();
-  }
-
-
-  closeSuccessPopup(): void {
-
-    console.log(
-      'Closing success popup'
-    );
-
-    this.showSuccessPopup = false;
-
-    this.successTitle = '';
-    this.successMessage = '';
-    this.successUsername = '';
-    this.successPassword = '';
-
-    this.cdr.detectChanges();
-  }
+    closeSuccessPopup(): void {
+        this.showSuccessPopup = false;
+        this.successTitle = '';
+        this.successMessage = '';
+        this.successUsername = '';
+        this.successPassword = '';
+        this.cdr.detectChanges();
+    }
 }

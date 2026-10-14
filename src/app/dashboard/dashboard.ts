@@ -14,7 +14,6 @@ export class Dashboard implements OnInit {
   doctors: any[] = [];
   totalDoctors = 0;
 
-  // Sidebar collapsed/expanded state
   sidebarCollapsed = false;
 
   constructor(
@@ -52,7 +51,6 @@ export class Dashboard implements OnInit {
     });
   }
 
-  // Get initials for doctor avatar
   getDoctorInitials(name: string): string {
     if (!name) {
       return 'DR';
@@ -67,7 +65,6 @@ export class Dashboard implements OnInit {
     return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
   }
 
-  // Toggle sidebar
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
