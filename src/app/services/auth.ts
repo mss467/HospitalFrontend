@@ -6,7 +6,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://raleigh-nicholas-moment-secretariat.trycloudflare.com/api/auth';
+  private apiUrl = 'https://somebody-judge-sure-optional.trycloudflare.com/api/auth';
 
   constructor(private http: HttpClient) {}
 
